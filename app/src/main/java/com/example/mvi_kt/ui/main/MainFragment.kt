@@ -3,11 +3,15 @@ package com.example.mvi_kt.ui.main
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.mvi_kt.R
+import com.example.mvi_kt.ui.main.state.MainStateEvent
+import com.example.mvi_kt.ui.main.state.MainStateEvent.*
 
 class MainFragment : Fragment(){
 
-
+    lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,6 +23,48 @@ class MainFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+
+        viewModel = activity?.run {
+            ViewModelProvider(this).get(MainViewModel::class.java)
+        }?: throw Exception("Invalid Activity")
+
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
+            println("DEBUG : dataState : ${dataState}")
+
+            dataState.blogPosts?.let{
+                viewModel.setBlogListData(it)
+            }
+
+            dataState.user?.let {
+                viewModel.setUserData(it)
+            }
+        })
+
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewState.blogPosts?.let{
+                println("DEBUG: Setting blog posts to RecyclerView: ${viewState.blogPosts}")
+            }
+
+            viewState.user?.let{
+                // set User data to widgets
+                println("DEBUG: Setting User data: ${viewState.user}")
+            }
+
+        })
+
+    }
+
+    fun triggerGetUserEvent(){
+        viewModel.setStateEvent(GetUserEvent("1"))
+    }
+
+    fun triggerGetBlogEvent(){
+        viewModel.setStateEvent(GetBlogEvent())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -27,6 +73,11 @@ class MainFragment : Fragment(){
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_get_user -> triggerGetUserEvent()
+
+            R.id.action_get_blogs -> triggerGetBlogEvent()
+        }
         return super.onOptionsItemSelected(item)
     }
 }
