@@ -25,7 +25,7 @@ class MainViewModel : ViewModel(){
             }
         }
 
-    fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState>{
+    private fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState>{
         println("DEBUG: New StateEvent detected: $stateEvent")
 
         return when(stateEvent){
@@ -102,6 +102,15 @@ class MainViewModel : ViewModel(){
         val state: MainStateEvent
         state = event
         _stateEvent.value = state
+    }
+
+}
+
+fun main(){
+
+    val names = arrayOf("H", "E", "L", "L", "O");
+    for(n in names){
+        print(" $n ")
     }
 
 }
