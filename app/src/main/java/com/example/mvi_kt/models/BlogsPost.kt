@@ -3,7 +3,7 @@ package com.example.mvi_kt.models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Blogs (
+data class BlogsPost (
     @Expose
     @SerializedName("pk")
     val pk: Int? = null,

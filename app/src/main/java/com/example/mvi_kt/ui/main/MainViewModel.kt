@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.mvi_kt.models.Blogs
+import com.example.mvi_kt.models.BlogsPost
 import com.example.mvi_kt.models.User
 import com.example.mvi_kt.ui.main.state.MainStateEvent
 import com.example.mvi_kt.ui.main.state.MainViewState
@@ -33,9 +33,9 @@ class MainViewModel : ViewModel(){
                 return object: LiveData<MainViewState>(){
                     override fun onActive() {
                         super.onActive()
-                        val blogList: ArrayList<Blogs> = ArrayList()
+                        val blogList: ArrayList<BlogsPost> = ArrayList()
                         blogList.add(
-                            Blogs(
+                            BlogsPost(
                                 pk = 0,
                                 title = "Vancouver PNE 2019",
                                 body = "Here is Jess and I at the Vancouver PNE. We ate a lot of food.",
@@ -43,7 +43,7 @@ class MainViewModel : ViewModel(){
                             )
                         )
                         blogList.add(
-                            Blogs(
+                            BlogsPost(
                                 pk = 1,
                                 title = "Ready for a Walk",
                                 body = "Here I am at the park with my dogs Kiba and Maizy. Maizy is the smaller one and Kiba is the larger one.",
@@ -79,7 +79,7 @@ class MainViewModel : ViewModel(){
         }
     }
 
-    fun setBlogListData(blogPosts: List<Blogs>){
+    fun setBlogListData(blogPosts: List<BlogsPost>){
         val update = getCurrentViewStateOrNew()
         update.blogPosts = blogPosts
         _viewState.value = update
