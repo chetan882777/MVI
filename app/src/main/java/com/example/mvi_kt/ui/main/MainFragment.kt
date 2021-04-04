@@ -35,7 +35,6 @@ class MainFragment : Fragment(){
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             println("DEBUG : dataState : ${dataState}")
-
             dataState.blogPosts?.let {
                 viewModel.setBlogListData(it)
             }
@@ -46,6 +45,7 @@ class MainFragment : Fragment(){
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+
             viewState.blogPosts?.let {
                 println("DEBUG: Setting blog posts to RecyclerView: ${viewState.blogPosts}")
             }

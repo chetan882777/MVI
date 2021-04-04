@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.mvi_kt.models.BlogsPost
 import com.example.mvi_kt.models.User
+import com.example.mvi_kt.repository.Repository
 import com.example.mvi_kt.ui.main.state.MainStateEvent
 import com.example.mvi_kt.ui.main.state.MainViewState
 import com.example.mvi_kt.util.AbsentLiveData
@@ -30,46 +31,10 @@ class MainViewModel : ViewModel(){
 
         return when(stateEvent){
             is MainStateEvent.GetBlogEvent -> {
-                return object: LiveData<MainViewState>(){
-                    override fun onActive() {
-                        super.onActive()
-                        val blogList: ArrayList<BlogsPost> = ArrayList()
-                        blogList.add(
-                            BlogsPost(
-                                pk = 0,
-                                title = "Vancouver PNE 2019",
-                                body = "Here is Jess and I at the Vancouver PNE. We ate a lot of food.",
-                                image = "https://cdn.open-api.xyz/open-api-static/static-blog-images/image8.jpg"
-                            )
-                        )
-                        blogList.add(
-                            BlogsPost(
-                                pk = 1,
-                                title = "Ready for a Walk",
-                                body = "Here I am at the park with my dogs Kiba and Maizy. Maizy is the smaller one and Kiba is the larger one.",
-                                image = "https://cdn.open-api.xyz/open-api-static/static-blog-images/image2.jpg"
-                            )
-                        )
-                        value = MainViewState(
-                            blogPosts = blogList
-                        )
-                    }
-                }
+                return Repository.getBlogPosts()
             }
             is MainStateEvent.GetUserEvent -> {
-                return object: LiveData<MainViewState>(){
-                    override fun onActive() {
-                        super.onActive()
-                        val user = User(
-                            email = "mitch@tabian.ca",
-                            username = "mitch",
-                            image = "https://cdn.open-api.xyz/open-api-static/static-random-images/logo_1080_1080.png"
-                        )
-                        value = MainViewState(
-                            user = user
-                        )
-                    }
-                }
+                return Repository.getUser(stateEvent.Userid)
             }
 
             is MainStateEvent.None -> {
@@ -92,10 +57,9 @@ class MainViewModel : ViewModel(){
     }
 
     fun getCurrentViewStateOrNew(): MainViewState {
-        val value = viewState.value?.let{
+        return viewState.value?.let {
             it
-        }?: MainViewState()
-        return value
+        } ?: MainViewState()
     }
 
     fun setStateEvent(event: MainStateEvent){
