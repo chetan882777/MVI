@@ -10,6 +10,7 @@ import com.example.mvi_kt.repository.Repository
 import com.example.mvi_kt.ui.main.state.MainStateEvent
 import com.example.mvi_kt.ui.main.state.MainViewState
 import com.example.mvi_kt.util.AbsentLiveData
+import com.example.mvi_kt.util.DataState
 
 class MainViewModel : ViewModel(){
 
@@ -19,14 +20,14 @@ class MainViewModel : ViewModel(){
     val viewState: LiveData<MainViewState>
      get() = _viewState
 
-    val dataState : LiveData<MainViewState> = Transformations
+    val dataState : LiveData<DataState<MainViewState>> = Transformations
         .switchMap(_stateEvent){
             it?.let {
                 handleStateEvent(it)
             }
         }
 
-    private fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState>{
+    private fun handleStateEvent(stateEvent: MainStateEvent): LiveData<DataState<MainViewState>>{
         println("DEBUG: New StateEvent detected: $stateEvent")
 
         return when(stateEvent){

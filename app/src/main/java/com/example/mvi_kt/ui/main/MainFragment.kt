@@ -35,12 +35,23 @@ class MainFragment : Fragment(){
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             println("DEBUG : dataState : ${dataState}")
-            dataState.blogPosts?.let {
-                viewModel.setBlogListData(it)
+
+            dataState.data?.let { mainViewState ->
+                mainViewState.blogPosts?.let {
+                    viewModel.setBlogListData(it)
+                }
+
+                mainViewState.user?.let {
+                    viewModel.setUserData(it)
+                }
             }
 
-            dataState.user?.let {
-                viewModel.setUserData(it)
+            dataState.message?.let {
+
+            }
+
+            dataState.loading?.let {
+
             }
         })
 

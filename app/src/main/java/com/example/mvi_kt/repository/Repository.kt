@@ -1,60 +1,48 @@
 package com.example.mvi_kt.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import com.example.mvi_kt.api.RetrofitBuilder
+import com.example.mvi_kt.models.BlogsPost
+import com.example.mvi_kt.models.User
 import com.example.mvi_kt.ui.main.state.MainViewState
-import com.example.mvi_kt.util.ApiEmptyResponse
 import com.example.mvi_kt.util.ApiSuccessResponse
+import com.example.mvi_kt.util.DataState
+import com.example.mvi_kt.util.GenericApiResponse
 
 object Repository {
 
-    fun getBlogPosts(): LiveData<MainViewState> {
-        return Transformations
-            .switchMap(RetrofitBuilder.apiService.getBlogPosts()) { apiResponse ->
-                object : LiveData<MainViewState>() {
-                    override fun onActive() {
-                        super.onActive()
-                        when(apiResponse) {
-                            is ApiSuccessResponse -> {
-                                value = MainViewState(
-                                    blogPosts =  apiResponse.body
-                                )
-                            }
-                            is ApiEmptyResponse -> {
-                                value = MainViewState()
-                            }
-                            is ApiEmptyResponse -> {
-                                value = MainViewState()
-                            }
-                        }
-                    }
-                }
+    fun getBlogPosts(): LiveData<DataState<MainViewState>> {
+        return object : NetworkBoundResource<List<BlogsPost>, MainViewState> () {
+            override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<BlogsPost>>) {
+                result.value = DataState.data(
+                    data = MainViewState(
+                        blogPosts = response.body
+                    )
+                )
             }
+
+            override fun createCall(): LiveData<GenericApiResponse<List<BlogsPost>>> {
+                return RetrofitBuilder.apiService.getBlogPosts()
+            }
+
+        }.asLiveData()
     }
 
 
-    fun getUser(userId : String): LiveData<MainViewState> {
-        return Transformations
-            .switchMap(RetrofitBuilder.apiService.getUser(userId)) { apiResponse ->
-                object : LiveData<MainViewState>() {
-                    override fun onActive() {
-                        super.onActive()
-                        when(apiResponse) {
-                            is ApiSuccessResponse -> {
-                                value = MainViewState(
-                                    user =  apiResponse.body
-                                )
-                            }
-                            is ApiEmptyResponse -> {
-                                value = MainViewState()
-                            }
-                            is ApiEmptyResponse -> {
-                                value = MainViewState()
-                            }
-                        }
-                    }
-                }
+    fun getUser(userId: String): LiveData<DataState<MainViewState>> {
+        return object : NetworkBoundResource<User, MainViewState> () {
+            override fun handleApiSuccessResponse(response: ApiSuccessResponse<User>) {
+                result.value = DataState.data(
+                    data = MainViewState(
+                        user = response.body
+                    )
+                )
             }
+
+            override fun createCall(): LiveData<GenericApiResponse<User>> {
+                return RetrofitBuilder.apiService.getUser(userId)
+            }
+
+        }.asLiveData()
     }
 }
