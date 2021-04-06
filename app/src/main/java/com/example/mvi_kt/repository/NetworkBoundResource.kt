@@ -34,7 +34,7 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType> {
     fun handleNetworkCall(response: GenericApiResponse<ResponseObject>) {
         when( response ) {
             is ApiSuccessResponse -> {
-                handleNetworkCall(response)
+                handleApiSuccessResponse(response)
             }
             is ApiErrorResponse -> {
                 println("DEBUG: NetworkBoundResource: ${response.errorMessage}")
