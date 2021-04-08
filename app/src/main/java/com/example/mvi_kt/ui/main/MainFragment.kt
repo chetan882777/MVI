@@ -6,10 +6,13 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mvi_kt.R
 import com.example.mvi_kt.ui.DataStateListener
 import com.example.mvi_kt.ui.main.state.MainStateEvent
 import com.example.mvi_kt.ui.main.state.MainStateEvent.*
+import com.example.mvi_kt.util.TopSpacingItemDecoration
+import kotlinx.android.synthetic.main.fragment_main.*
 import java.lang.ClassCastException
 
 class MainFragment : Fragment(){
@@ -17,6 +20,8 @@ class MainFragment : Fragment(){
     lateinit var viewModel: MainViewModel
 
     lateinit var dataStatehandler : DataStateListener
+
+    lateinit var mainRecyclerAdapter : MainRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +40,16 @@ class MainFragment : Fragment(){
         }?: throw Exception("Invalid Activity")
 
         subscribeObservers()
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(activity)
+            addItemDecoration(TopSpacingItemDecoration(30))
+            mainRecyclerAdapter = MainRecyclerAdapter()
+            adapter = mainRecyclerAdapter
+        }
     }
 
     private fun subscribeObservers() {
@@ -46,6 +61,7 @@ class MainFragment : Fragment(){
 
             dataState.data?.let { event ->
                 event.getContentIfNotHandled()?.let { mainViewState ->
+
                     mainViewState.blogPosts?.let {
                         viewModel.setBlogListData(it)
                     }
@@ -62,6 +78,7 @@ class MainFragment : Fragment(){
 
             viewState.blogPosts?.let {
                 println("DEBUG: Setting blog posts to RecyclerView: ${viewState.blogPosts}")
+                mainRecyclerAdapter.submitList(it)
             }
 
             viewState.user?.let {

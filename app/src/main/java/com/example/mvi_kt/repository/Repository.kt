@@ -2,7 +2,7 @@ package com.example.mvi_kt.repository
 
 import androidx.lifecycle.LiveData
 import com.example.mvi_kt.api.RetrofitBuilder
-import com.example.mvi_kt.models.BlogsPost
+import com.example.mvi_kt.models.BlogPost
 import com.example.mvi_kt.models.User
 import com.example.mvi_kt.ui.main.state.MainViewState
 import com.example.mvi_kt.util.ApiSuccessResponse
@@ -12,8 +12,8 @@ import com.example.mvi_kt.util.GenericApiResponse
 object Repository {
 
     fun getBlogPosts(): LiveData<DataState<MainViewState>> {
-        return object : NetworkBoundResource<List<BlogsPost>, MainViewState> () {
-            override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<BlogsPost>>) {
+        return object : NetworkBoundResource<List<BlogPost>, MainViewState> () {
+            override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<BlogPost>>) {
                 result.value = DataState.data(
                     data = MainViewState(
                         blogPosts = response.body
@@ -21,7 +21,7 @@ object Repository {
                 )
             }
 
-            override fun createCall(): LiveData<GenericApiResponse<List<BlogsPost>>> {
+            override fun createCall(): LiveData<GenericApiResponse<List<BlogPost>>> {
                 return RetrofitBuilder.apiService.getBlogPosts()
             }
 

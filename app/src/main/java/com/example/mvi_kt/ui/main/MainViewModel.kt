@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.mvi_kt.models.BlogsPost
+import com.example.mvi_kt.models.BlogPost
 import com.example.mvi_kt.models.User
 import com.example.mvi_kt.repository.Repository
 import com.example.mvi_kt.ui.main.state.MainStateEvent
@@ -45,7 +45,7 @@ class MainViewModel : ViewModel(){
         }
     }
 
-    fun setBlogListData(blogPosts: List<BlogsPost>){
+    fun setBlogListData(blogPosts: List<BlogPost>){
         val update = getCurrentViewStateOrNew()
         update.blogPosts = blogPosts
         _viewState.value = update
