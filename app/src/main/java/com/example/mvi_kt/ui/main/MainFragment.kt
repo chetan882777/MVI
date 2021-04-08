@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.mvi_kt.R
+import com.example.mvi_kt.models.User
 import com.example.mvi_kt.ui.DataStateListener
 import com.example.mvi_kt.ui.main.state.MainStateEvent
 import com.example.mvi_kt.ui.main.state.MainStateEvent.*
@@ -84,10 +86,22 @@ class MainFragment : Fragment(){
             viewState.user?.let {
                 // set User data to widgets
                 println("DEBUG: Setting User data: ${viewState.user}")
+                setUserProperties(it)
             }
 
         })
 
+    }
+
+    private fun setUserProperties(user : User) {
+        email.text = user.email
+        username.text = user.username
+
+        view?.let {
+            Glide.with(it.context)
+                .load(user.image)
+                .into(image)
+        }
     }
 
     fun triggerGetUserEvent(){
